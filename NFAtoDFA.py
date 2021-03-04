@@ -1,4 +1,4 @@
-import re
+from texttable import Texttable
 
 SUM_SYMBOL = "Î£"
 DELTA = "áºŸ"
@@ -89,16 +89,41 @@ def NFAtoDFA():
         newStates.append(production[1])
 
     newStates.remove(newStates[0])
-    #print(vn)
 
-#from q2q1q3 generates ['q1', 'q2', 'q3']
+#from q2q1q3 generates ['q1', 'q2', 'q3'] also order them 
 def GetSubstates(state):
   substates = ["q"+stateNumber for stateNumber in filter(None, state.split("q"))]
   substates.sort(key=lambda x: int(''.join(filter(str.isdigit, x))))
   
   return substates
 
+def PrintTable(grammar):
+  t = Texttable()
+
+  tableHeaders = vt.copy()
+  tableHeaders.insert(0, "")
+  t.add_row(tableHeaders)
+
+  for state in vn:
+    row = []
+
+    if state == 'q0':
+      row.append("-> "+state)
+    elif finalState in state:
+      row.append("*"+state)
+    else:
+      row.append(state)
+    
+    for terminalSymbol in vt:
+      currentStateTuple = [item for item in grammar[state.strip()] if item[0] == terminalSymbol]
+      if len(currentStateTuple) > 0:
+        row.append(currentStateTuple[0][1])
+      else:
+        row.append("-")
+    t.add_row(row)
+  
+  print(t.draw())
 
 ParseGrammar()
 NFAtoDFA()
-print(grammar)
+PrintTable(grammar)
