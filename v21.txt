@@ -1,3 +1,0 @@
-VN={q0, q1, q2, q3},
-VT={a, b, c},
-P={q0 - aq0, q0 - aq1, q1 - bq2, q2 - cq3, q3 - cq3, q2 - aq2}
