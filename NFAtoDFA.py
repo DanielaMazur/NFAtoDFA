@@ -16,10 +16,10 @@ newStates = []
 def ParseGrammar():
   global vt, vn, grammar, finalState
 
-  file = open("varianta21.txt", "r")
+  file = open("v12.txt", "r")
   fileContent = file.read()
 
-  vn = (fileContent[fileContent.index("Q")+6:fileContent.index("\n")-2]).split(", ")
+  vn = (fileContent[fileContent.index("Q")+6:fileContent.index("\n")-2]).strip().split(", ")
   vt = (fileContent[fileContent.index(SUM_SYMBOL)+6:fileContent.index("\n", fileContent.index(SUM_SYMBOL))-3]).strip().split(", ")
 
   finalState = fileContent[fileContent.index('F')+ 5 :fileContent.index("\n", fileContent.index('F'))-2]
@@ -50,11 +50,16 @@ def ParseGrammar():
     if not isProductionExisting:
       grammar[vertex].append((tranzitionSymbol, derivedVertex))
 
+  #add to grammar nonterimal symbols that have no productions
+  for nonTerminal in vn:
+    if nonTerminal not in grammar:
+      grammar[nonTerminal] = []
 
 def NFAtoDFA():
   while len(newStates):
     grammar[newStates[0]] = []
-    vn.append(newStates[0])
+    if newStates[0] not in vn:
+      vn.append(newStates[0])
 
     subStates = GetSubstates(newStates[0]) 
 
@@ -71,7 +76,7 @@ def NFAtoDFA():
             #replace repreting states with empty string
             for prevSubstate in prevProductionSubstates:
               if prevSubstate in newProductionSubstates:
-                production = (production[1], production[1].replace(prevSubstate, ""))
+                production = (production[0], production[1].replace(prevSubstate, ""))
 
             orderedNewStateName = "".join(GetSubstates(newProduction[1] + production[1]))
             grammar[newStates[0]][grammar[newStates[0]].index(newProduction)] = (production[0], orderedNewStateName)
