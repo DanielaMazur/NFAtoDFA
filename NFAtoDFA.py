@@ -16,7 +16,7 @@ newStates = []
 def ParseGrammar():
   global vt, vn, grammar, finalState
 
-  file = open("v12.txt", "r")
+  file = open("v21.txt", "r")
   fileContent = file.read()
 
   vn = (fileContent[fileContent.index("Q")+6:fileContent.index("\n")-2]).strip().split(", ")
